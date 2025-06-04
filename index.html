@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employment Law Calculator 2025-26</title>
+  <script defer>
+    function calculateCompensation() {
+      const salary = parseFloat(document.getElementById('salary').value);
+      const years = parseFloat(document.getElementById('years').value);
+      const age = parseInt(document.getElementById('age').value);
+      const weeklyPayCap = 700; // hypothetical cap for 2025-26
+
+      let factor = 0;
+      if (age < 22) factor = 0.5;
+      else if (age < 41) factor = 1;
+      else factor = 1.5;
+
+      let weeksEntitlement = years * factor;
+      let cappedWeeklyPay = Math.min(salary / 52, weeklyPayCap);
+      let redundancyPay = cappedWeeklyPay * weeksEntitlement;
+
+      document.getElementById('result').textContent = 
+        `Estimated Statutory Redundancy Pay: £${redundancyPay.toFixed(2)}`;
+    }
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    input, button {
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+    #result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Employment Law Calculator 2025-26</h1>
+  <p>Estimate your statutory redundancy pay based on age, salary, and years of service.</p>
+
+  <label for="age">Your Age</label>
+  <input type="number" id="age" placeholder="e.g. 45" />
+
+  <label for="salary">Annual Salary (£)</label>
+  <input type="number" id="salary" placeholder="e.g. 36000" />
+
+  <label for="years">Years of Service</label>
+  <input type="number" id="years" placeholder="e.g. 10" />
+
+  <button onclick="calculateCompensation()">Calculate Redundancy Pay</button>
+  <div id="result"></div>
+</body>
+</html>
