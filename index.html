@@ -3,47 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employment Law Statutory Payments Calculator 2025-26</title>
+  <title>Employment Law Statutory Payments 2025-26</title>
   <script defer>
     function showStatutoryInfo() {
-      const smpRate = 184.03; // weekly
-      const sspRate = 116.75; // weekly
+      const rates = {
+        sickPay: 116.75,
+        maternity: 184.03,
+        paternity: 184.03,
+        adoption: 184.03,
+        sharedParental: 184.03
+      };
 
       const nmwRates = {
-        '21+': 11.44,
-        '18-20': 8.60,
-        '16-17': 6.40,
-        'apprentice': 6.40
+        '21 and over (National Living Wage)': 11.44,
+        '18 to 20': 8.60,
+        '16 to 17': 6.40,
+        'Apprentice': 6.40
       };
 
-      const compLimits = {
-        maxBasicAward: 20500,
-        maxCompensatoryAward: 115115,
-        unfairDismissalTotalCap: 135615
+      const compensationLimits = {
+        basicAwardCap: 20500,
+        compensatoryAwardCap: 115115,
+        totalUnfairDismissalCap: 135615,
+        weekPayCap: 700,
+        guaranteePayDaily: 37.45
       };
 
-      let results = `📌 Statutory Payments (2025–26):\n\n`;
-      results += `• Statutory Sick Pay (weekly): £${sspRate}\n`;
-      results += `• Statutory Maternity/Paternity/Adoption Pay (weekly after 6 weeks): £${smpRate}\n\n`;
+      let output = `📌 Statutory Payments for Time Off Work (Weekly Rates - 2025/26):\n\n`;
+      output += `• Statutory Sick Pay (SSP): £${rates.sickPay}\n`;
+      output += `• Statutory Maternity Pay (after 6 weeks): £${rates.maternity}\n`;
+      output += `• Statutory Paternity Pay: £${rates.paternity}\n`;
+      output += `• Statutory Adoption Pay: £${rates.adoption}\n`;
+      output += `• Shared Parental Pay: £${rates.sharedParental}\n\n`;
 
-      results += `📌 National Minimum & Living Wage (Hourly):\n`;
+      output += `📌 National Minimum & Living Wage (Hourly - 2025/26):\n`;
       for (const group in nmwRates) {
-        results += `• Age ${group}: £${nmwRates[group]}\n`;
+        output += `• ${group}: £${nmwRates[group]}\n`;
       }
 
-      results += `\n📌 Employment Tribunal Compensation Limits:\n`;
-      results += `• Basic award cap: £${compLimits.maxBasicAward}\n`;
-      results += `• Compensatory award cap: £${compLimits.maxCompensatoryAward}\n`;
-      results += `• Total cap for unfair dismissal: £${compLimits.unfairDismissalTotalCap}`;
+      output += `\n📌 Employment Tribunal Compensation Limits (2025/26):\n`;
+      output += `• Basic award cap: £${compensationLimits.basicAwardCap}\n`;
+      output += `• Compensatory award cap: £${compensationLimits.compensatoryAwardCap}\n`;
+      output += `• Unfair dismissal total cap: £${compensationLimits.totalUnfairDismissalCap}\n`;
+      output += `• Cap on a week's pay (used in calculations): £${compensationLimits.weekPayCap}\n`;
+      output += `• Statutory Guarantee Pay (per day): £${compensationLimits.guaranteePayDaily}`;
 
-      document.getElementById('result').textContent = results;
+      document.getElementById('result').textContent = output;
     }
   </script>
   <style>
     body {
       font-family: sans-serif;
       padding: 2rem;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
     }
     button {
@@ -68,8 +80,8 @@
   </style>
 </head>
 <body>
-  <h1>Employment Law Statutory Rates 2025–26</h1>
-  <p>Review key employment law rates and compensation limits.</p>
+  <h1>Employment Law Statutory Payments 2025–26</h1>
+  <p>Review statutory rates for time off work, minimum wage, and tribunal compensation limits for the 2025–26 tax year.</p>
 
   <button onclick="showStatutoryInfo()">Show 2025–26 Rates</button>
   <div id="result"></div>
