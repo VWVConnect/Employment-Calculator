@@ -4,70 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Employment Law Statutory Calculators 2025-26</title>
-  <style>
-    /* Put all your CSS here */
-    @font-face {
-      font-family: 'ArticulatCF-Light';
-      src: url('ArticulatCF-Light.woff2') format('woff2'),
-           url('ArticulatCF-Light.woff') format('woff');
-      font-weight: 300;
-      font-style: normal;
-    }
-    @font-face {
-      font-family: 'ArticulatCF-Bold';
-      src: url('ArticulatCF-Bold.woff2') format('woff2'),
-           url('ArticulatCF-Bold.woff') format('woff');
-      font-weight: 700;
-      font-style: normal;
-    }
-    /* All other CSS from the style block you want to use */
-    :root {
-      --primary-color: #07b0a0;
-      --text-color: #192543;
-      --outline-color: #7fc28f;
-      --background-color: #f5f7fa;
-      --card-bg: #fff;
-      --border-radius: 12px;
-      --shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    /* ... and so on ... */
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Your HTML content goes here -->
   <h1>Employment Law Statutory Calculators 2025–26</h1>
 
   <section id="ssp-section">
     <h2>Statutory Sick Pay (SSP) Calculator</h2>
     <label for="sspDays">Number of sick days (max 28):</label>
     <input type="number" id="sspDays" min="0" max="28" value="0" />
-    <button onclick="calculateSSP()">Calculate SSP</button>
+    <button id="calculateSspBtn">Calculate SSP</button>
     <div id="sspResult" class="result"></div>
   </section>
 
-  <!-- More sections for other statutory payments -->
+  <!-- Add more sections as needed -->
 
-  <script>
-    // Your JS code goes here
-    function calculateSSP() {
-      const SSP_WEEKLY_RATE = 116.75;
-      const maxDays = 28;
-      const sspDays = Number(document.getElementById('sspDays').value);
-
-      if (sspDays < 0 || sspDays > maxDays) {
-        document.getElementById('sspResult').textContent = 'Please enter days between 0 and 28.';
-        return;
-      }
-
-      const daysToPay = Math.min(sspDays, maxDays);
-      const dailyRate = SSP_WEEKLY_RATE / 7;
-      const totalPay = daysToPay * dailyRate;
-
-      document.getElementById('sspResult').textContent =
-        `Estimated Statutory Sick Pay:\n£${totalPay.toFixed(2)}`;
-    }
-
-    // Add other calculator functions here similarly...
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
