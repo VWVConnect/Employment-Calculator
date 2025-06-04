@@ -9,7 +9,7 @@
       const salary = parseFloat(document.getElementById('salary').value);
       const years = parseFloat(document.getElementById('years').value);
       const age = parseInt(document.getElementById('age').value);
-      const weeklyPayCap = 700; // hypothetical cap for 2025-26
+      const weeklyPayCap = 700; // updated for 2025-26
 
       let factor = 0;
       if (age < 22) factor = 0.5;
@@ -20,8 +20,37 @@
       let cappedWeeklyPay = Math.min(salary / 52, weeklyPayCap);
       let redundancyPay = cappedWeeklyPay * weeksEntitlement;
 
-      document.getElementById('result').textContent = 
-        `Estimated Statutory Redundancy Pay: £${redundancyPay.toFixed(2)}`;
+      const smpRate = 184.03; // 2025-26 Statutory Maternity/Paternity/Adoption Pay (weekly)
+      const sspRate = 116.75; // Statutory Sick Pay
+
+      const nmwRates = {
+        '21+': 11.44,
+        '18-20': 8.60,
+        '16-17': 6.40,
+        'apprentice': 6.40
+      };
+
+      const compLimits = {
+        maxBasicAward: 20500,
+        maxCompensatoryAward: 115115,
+        unfairDismissalTotalCap: 135615
+      };
+
+      let results = `Estimated Statutory Redundancy Pay: £${redundancyPay.toFixed(2)}\n\n`;
+      results += `Statutory Sick Pay (weekly): £${sspRate}\n`;
+      results += `Statutory Maternity/Paternity Pay (weekly after 6 weeks): £${smpRate}\n\n`;
+
+      results += `National Minimum Wage (2025-26):\n`;
+      for (const group in nmwRates) {
+        results += ` - Age ${group}: £${nmwRates[group]} per hour\n`;
+      }
+
+      results += `\nEmployment Tribunal Compensation Limits:\n`;
+      results += ` - Basic award cap: £${compLimits.maxBasicAward}\n`;
+      results += ` - Compensatory award cap: £${compLimits.maxCompensatoryAward}\n`;
+      results += ` - Unfair dismissal total cap: £${compLimits.unfairDismissalTotalCap}`;
+
+      document.getElementById('result').textContent = results;
     }
   </script>
   <style>
@@ -39,12 +68,13 @@
     #result {
       margin-top: 1rem;
       font-weight: bold;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
   <h1>Employment Law Calculator 2025-26</h1>
-  <p>Estimate your statutory redundancy pay based on age, salary, and years of service.</p>
+  <p>Estimate your statutory redundancy pay and view other employment limits for 2025-26.</p>
 
   <label for="age">Your Age</label>
   <input type="number" id="age" placeholder="e.g. 45" />
@@ -55,7 +85,7 @@
   <label for="years">Years of Service</label>
   <input type="number" id="years" placeholder="e.g. 10" />
 
-  <button onclick="calculateCompensation()">Calculate Redundancy Pay</button>
+  <button onclick="calculateCompensation()">Calculate</button>
   <div id="result"></div>
 </body>
 </html>
