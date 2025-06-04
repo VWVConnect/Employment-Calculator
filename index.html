@@ -3,87 +3,117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employment Law Statutory Payments 2025-26</title>
-  <script defer>
-    function showStatutoryInfo() {
-      const rates = {
-        sickPay: 116.75,
-        maternity: 184.03,
-        paternity: 184.03,
-        adoption: 184.03,
-        sharedParental: 184.03
-      };
-
-      const nmwRates = {
-        '21 and over (National Living Wage)': 11.44,
-        '18 to 20': 8.60,
-        '16 to 17': 6.40,
-        'Apprentice': 6.40
-      };
-
-      const compensationLimits = {
-        basicAwardCap: 20500,
-        compensatoryAwardCap: 115115,
-        totalUnfairDismissalCap: 135615,
-        weekPayCap: 700,
-        guaranteePayDaily: 37.45
-      };
-
-      let output = `📌 Statutory Payments for Time Off Work (Weekly Rates - 2025/26):\n\n`;
-      output += `• Statutory Sick Pay (SSP): £${rates.sickPay}\n`;
-      output += `• Statutory Maternity Pay (after 6 weeks): £${rates.maternity}\n`;
-      output += `• Statutory Paternity Pay: £${rates.paternity}\n`;
-      output += `• Statutory Adoption Pay: £${rates.adoption}\n`;
-      output += `• Shared Parental Pay: £${rates.sharedParental}\n\n`;
-
-      output += `📌 National Minimum & Living Wage (Hourly - 2025/26):\n`;
-      for (const group in nmwRates) {
-        output += `• ${group}: £${nmwRates[group]}\n`;
-      }
-
-      output += `\n📌 Employment Tribunal Compensation Limits (2025/26):\n`;
-      output += `• Basic award cap: £${compensationLimits.basicAwardCap}\n`;
-      output += `• Compensatory award cap: £${compensationLimits.compensatoryAwardCap}\n`;
-      output += `• Unfair dismissal total cap: £${compensationLimits.totalUnfairDismissalCap}\n`;
-      output += `• Cap on a week's pay (used in calculations): £${compensationLimits.weekPayCap}\n`;
-      output += `• Statutory Guarantee Pay (per day): £${compensationLimits.guaranteePayDaily}`;
-
-      document.getElementById('result').textContent = output;
-    }
-  </script>
+  <title>Employment Law Statutory Calculators 2025-26</title>
   <style>
     body {
       font-family: sans-serif;
       padding: 2rem;
-      max-width: 700px;
+      max-width: 800px;
       margin: auto;
     }
+    h2 {
+      margin-top: 2rem;
+    }
+    label, input, select {
+      display: block;
+      margin: 0.5rem 0;
+    }
     button {
-      padding: 0.75rem;
-      margin: 1rem 0;
-      width: 100%;
-      background: #2c3e50;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #2c3e50;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    #result {
-      margin-top: 1rem;
-      font-weight: bold;
-      white-space: pre-wrap;
+    .result {
       background: #f9f9f9;
       padding: 1rem;
       border: 1px solid #ccc;
+      margin-top: 1rem;
       border-radius: 8px;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <h1>Employment Law Statutory Payments 2025–26</h1>
-  <p>Review statutory rates for time off work, minimum wage, and tribunal compensation limits for the 2025–26 tax year.</p>
+  <h1>Employment Law Statutory Calculators 2025–26</h1>
 
-  <button onclick="showStatutoryInfo()">Show 2025–26 Rates</button>
-  <div id="result"></div>
+  <h2>📅 Statutory Sick Pay (SSP) Calculator</h2>
+  <label for="sspDays">Number of sick days:</label>
+  <input type="number" id="sspDays" />
+  <button onclick="calcSSP()">Calculate SSP</button>
+  <div id="sspResult" class="result"></div>
+
+  <h2>👶 Statutory Maternity/Paternity/Adoption/Shared Parental Pay</h2>
+  <label for="smpWeeks">Number of weeks at flat rate:</label>
+  <input type="number" id="smpWeeks" />
+  <button onclick="calcSMP()">Calculate Pay</button>
+  <div id="smpResult" class="result"></div>
+
+  <h2>💰 National Minimum & Living Wage Checker</h2>
+  <label for="ageGroup">Age Group:</label>
+  <select id="ageGroup">
+    <option value="11.44">21 and over</option>
+    <option value="8.60">18 to 20</option>
+    <option value="6.40">16 to 17</option>
+    <option value="6.40">Apprentice</option>
+  </select>
+  <label for="hoursWorked">Hours worked:</label>
+  <input type="number" id="hoursWorked" />
+  <button onclick="calcNMW()">Check Pay</button>
+  <div id="nmwResult" class="result"></div>
+
+  <h2>⚖️ Tribunal Compensation Estimator</h2>
+  <label for="weeklyPay">Weekly pay (£):</label>
+  <input type="number" id="weeklyPay" />
+  <label for="yearsWorked">Years worked:</label>
+  <input type="number" id="yearsWorked" />
+  <button onclick="calcCompensation()">Estimate Compensation</button>
+  <div id="compResult" class="result"></div>
+
+  <script>
+    const SSP_RATE = 116.75;
+    const SMP_RATE = 184.03;
+    const WEEK_PAY_CAP = 700;
+    const BASIC_AWARD_CAP = 20500;
+    const COMP_CAP = 115115;
+    const TOTAL_CAP = 135615;
+
+    function calcSSP() {
+      const days = parseInt(document.getElementById("sspDays").value);
+      const weeklyRate = SSP_RATE / 7;
+      const total = (days * weeklyRate).toFixed(2);
+      document.getElementById("sspResult").textContent = `Total SSP for ${days} day(s): £${total}`;
+    }
+
+    function calcSMP() {
+      const weeks = parseInt(document.getElementById("smpWeeks").value);
+      const total = (weeks * SMP_RATE).toFixed(2);
+      document.getElementById("smpResult").textContent = `Total Statutory Pay: £${total}`;
+    }
+
+    function calcNMW() {
+      const rate = parseFloat(document.getElementById("ageGroup").value);
+      const hours = parseFloat(document.getElementById("hoursWorked").value);
+      const total = (rate * hours).toFixed(2);
+      document.getElementById("nmwResult").textContent = `Total gross pay: £${total}`;
+    }
+
+    function calcCompensation() {
+      let pay = parseFloat(document.getElementById("weeklyPay").value);
+      const years = parseInt(document.getElementById("yearsWorked").value);
+      const cappedPay = Math.min(pay, WEEK_PAY_CAP);
+      const basicAward = Math.min(cappedPay * years, BASIC_AWARD_CAP);
+      const compensatory = Math.min(pay * 52, COMP_CAP);
+      const total = Math.min(basicAward + compensatory, TOTAL_CAP);
+
+      document.getElementById("compResult").textContent =
+        `Basic Award: £${basicAward.toFixed(2)}\n` +
+        `Compensatory Award: £${compensatory.toFixed(2)}\n` +
+        `Estimated Total Award (capped): £${total.toFixed(2)}`;
+    }
+  </script>
 </body>
 </html>
