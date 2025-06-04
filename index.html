@@ -2,117 +2,154 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Employment Law Statutory Calculators 2025-26</title>
   <style>
     body {
-      font-family: sans-serif;
-      padding: 2rem;
-      max-width: 800px;
+      font-family: Arial, sans-serif;
+      max-width: 700px;
       margin: auto;
+      padding: 20px;
     }
-    h2 {
-      margin-top: 2rem;
+    section {
+      margin-bottom: 2rem;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 8px;
+      background: #fafafa;
     }
-    label, input, select {
+    label {
       display: block;
-      margin: 0.5rem 0;
+      margin-top: 10px;
+    }
+    input, select, button {
+      margin-top: 5px;
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1rem;
     }
     button {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
+      margin-top: 15px;
       background-color: #2c3e50;
       color: white;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
+      border-radius: 5px;
     }
     .result {
-      background: #f9f9f9;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      margin-top: 1rem;
-      border-radius: 8px;
+      margin-top: 15px;
+      background: #eaeaea;
+      padding: 10px;
+      border-radius: 6px;
       white-space: pre-wrap;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <h1>Employment Law Statutory Calculators 2025–26</h1>
 
-  <h2>📅 Statutory Sick Pay (SSP) Calculator</h2>
-  <label for="sspDays">Number of sick days:</label>
-  <input type="number" id="sspDays" />
-  <button onclick="calcSSP()">Calculate SSP</button>
-  <div id="sspResult" class="result"></div>
+  <section id="ssp-section">
+    <h2>Statutory Sick Pay (SSP) Calculator</h2>
+    <label for="sspDays">Number of sick days (max 28):</label>
+    <input type="number" id="sspDays" min="0" max="28" value="0" />
+    <button onclick="calculateSSP()">Calculate SSP</button>
+    <div id="sspResult" class="result"></div>
+  </section>
 
-  <h2>👶 Statutory Maternity/Paternity/Adoption/Shared Parental Pay</h2>
-  <label for="smpWeeks">Number of weeks at flat rate:</label>
-  <input type="number" id="smpWeeks" />
-  <button onclick="calcSMP()">Calculate Pay</button>
-  <div id="smpResult" class="result"></div>
+  <section id="smp-section">
+    <h2>Maternity/Paternity/Adoption/Shared Parental Pay Calculator</h2>
+    <label for="smpWeeks">Number of weeks paid at statutory rate (max 39):</label>
+    <input type="number" id="smpWeeks" min="0" max="39" value="0" />
+    <button onclick="calculateSMP()">Calculate Statutory Pay</button>
+    <div id="smpResult" class="result"></div>
+  </section>
 
-  <h2>💰 National Minimum & Living Wage Checker</h2>
-  <label for="ageGroup">Age Group:</label>
-  <select id="ageGroup">
-    <option value="11.44">21 and over</option>
-    <option value="8.60">18 to 20</option>
-    <option value="6.40">16 to 17</option>
-    <option value="6.40">Apprentice</option>
-  </select>
-  <label for="hoursWorked">Hours worked:</label>
-  <input type="number" id="hoursWorked" />
-  <button onclick="calcNMW()">Check Pay</button>
-  <div id="nmwResult" class="result"></div>
+  <section id="nmw-section">
+    <h2>National Minimum & Living Wage Calculator</h2>
+    <label for="ageGroup">Age group:</label>
+    <select id="ageGroup">
+      <option value="11.44">21 and over (National Living Wage)</option>
+      <option value="8.60">18 to 20</option>
+      <option value="6.40">16 to 17</option>
+      <option value="6.40">Apprentice</option>
+    </select>
+    <label for="hoursWorked">Hours worked:</label>
+    <input type="number" id="hoursWorked" min="0" value="0" />
+    <button onclick="calculateNMW()">Calculate Pay</button>
+    <div id="nmwResult" class="result"></div>
+  </section>
 
-  <h2>⚖️ Tribunal Compensation Estimator</h2>
-  <label for="weeklyPay">Weekly pay (£):</label>
-  <input type="number" id="weeklyPay" />
-  <label for="yearsWorked">Years worked:</label>
-  <input type="number" id="yearsWorked" />
-  <button onclick="calcCompensation()">Estimate Compensation</button>
-  <div id="compResult" class="result"></div>
+  <section id="tribunal-section">
+    <h2>Employment Tribunal Compensation Estimator</h2>
+    <label for="weeklyPay">Weekly pay (£):</label>
+    <input type="number" id="weeklyPay" min="0" value="0" />
+    <label for="yearsWorked">Years worked:</label>
+    <input type="number" id="yearsWorked" min="0" value="0" />
+    <button onclick="calculateCompensation()">Estimate Compensation</button>
+    <div id="compResult" class="result"></div>
+  </section>
 
   <script>
-    const SSP_RATE = 116.75;
-    const SMP_RATE = 184.03;
+    const SSP_WEEKLY_RATE = 116.75;
+    const SMP_WEEKLY_RATE = 184.03;
+    const MAX_SSP_DAYS = 28;
+    const MAX_SMP_WEEKS = 39;
     const WEEK_PAY_CAP = 700;
     const BASIC_AWARD_CAP = 20500;
-    const COMP_CAP = 115115;
-    const TOTAL_CAP = 135615;
+    const COMPENSATORY_AWARD_CAP = 115115;
+    const TOTAL_COMP_CAP = 135615;
 
-    function calcSSP() {
-      const days = parseInt(document.getElementById("sspDays").value);
-      const weeklyRate = SSP_RATE / 7;
-      const total = (days * weeklyRate).toFixed(2);
-      document.getElementById("sspResult").textContent = `Total SSP for ${days} day(s): £${total}`;
+    function calculateSSP() {
+      const days = parseInt(document.getElementById('sspDays').value) || 0;
+      if (days < 0 || days > MAX_SSP_DAYS) {
+        document.getElementById('sspResult').textContent = 'Please enter sick days between 0 and 28.';
+        return;
+      }
+      const dailyRate = SSP_WEEKLY_RATE / 7;
+      const total = (dailyRate * days).toFixed(2);
+      document.getElementById('sspResult').textContent = `Total Statutory Sick Pay for ${days} day(s): £${total}`;
     }
 
-    function calcSMP() {
-      const weeks = parseInt(document.getElementById("smpWeeks").value);
-      const total = (weeks * SMP_RATE).toFixed(2);
-      document.getElementById("smpResult").textContent = `Total Statutory Pay: £${total}`;
+    function calculateSMP() {
+      const weeks = parseInt(document.getElementById('smpWeeks').value) || 0;
+      if (weeks < 0 || weeks > MAX_SMP_WEEKS) {
+        document.getElementById('smpResult').textContent = 'Please enter weeks between 0 and 39.';
+        return;
+      }
+      const total = (SMP_WEEKLY_RATE * weeks).toFixed(2);
+      document.getElementById('smpResult').textContent = `Total Statutory Pay for ${weeks} week(s): £${total}`;
     }
 
-    function calcNMW() {
-      const rate = parseFloat(document.getElementById("ageGroup").value);
-      const hours = parseFloat(document.getElementById("hoursWorked").value);
+    function calculateNMW() {
+      const rate = parseFloat(document.getElementById('ageGroup').value);
+      const hours = parseFloat(document.getElementById('hoursWorked').value) || 0;
+      if (hours < 0) {
+        document.getElementById('nmwResult').textContent = 'Please enter a valid number of hours.';
+        return;
+      }
       const total = (rate * hours).toFixed(2);
-      document.getElementById("nmwResult").textContent = `Total gross pay: £${total}`;
+      document.getElementById('nmwResult').textContent = `Total gross pay for ${hours} hour(s) at £${rate}/hour: £${total}`;
     }
 
-    function calcCompensation() {
-      let pay = parseFloat(document.getElementById("weeklyPay").value);
-      const years = parseInt(document.getElementById("yearsWorked").value);
-      const cappedPay = Math.min(pay, WEEK_PAY_CAP);
-      const basicAward = Math.min(cappedPay * years, BASIC_AWARD_CAP);
-      const compensatory = Math.min(pay * 52, COMP_CAP);
-      const total = Math.min(basicAward + compensatory, TOTAL_CAP);
+    function calculateCompensation() {
+      const weeklyPay = parseFloat(document.getElementById('weeklyPay').value) || 0;
+      const yearsWorked = parseInt(document.getElementById('yearsWorked').value) || 0;
+      if (weeklyPay < 0 || yearsWorked < 0) {
+        document.getElementById('compResult').textContent = 'Please enter valid positive numbers.';
+        return;
+      }
+      const cappedWeeklyPay = Math.min(weeklyPay, WEEK_PAY_CAP);
+      const basicAward = Math.min(cappedWeeklyPay * yearsWorked, BASIC_AWARD_CAP);
+      const compensatoryAward = Math.min(weeklyPay * 52, COMPENSATORY_AWARD_CAP);
+      const totalAward = Math.min(basicAward + compensatoryAward, TOTAL_COMP_CAP);
 
-      document.getElementById("compResult").textContent =
-        `Basic Award: £${basicAward.toFixed(2)}\n` +
-        `Compensatory Award: £${compensatory.toFixed(2)}\n` +
-        `Estimated Total Award (capped): £${total.toFixed(2)}`;
+      document.getElementById('compResult').textContent = 
+        `Estimated Tribunal Compensation:\n` +
+        `- Basic Award (capped): £${basicAward.toFixed(2)}\n` +
+        `- Compensatory Award (capped): £${compensatoryAward.toFixed(2)}\n` +
+        `- Total Award (capped): £${totalAward.toFixed(2)}`;
     }
   </script>
 </body>
